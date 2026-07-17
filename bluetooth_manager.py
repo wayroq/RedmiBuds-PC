@@ -41,7 +41,8 @@ class BluetoothManager:
         self.on_status_update("Поиск наушников (BLE)..." if self.is_ru else "Searching for earbuds (BLE)...")
         
         def callback(device, adv):
-            if "Redmi" in str(device.name) or "Buds" in str(device.name):
+            device_name = str(device.name)
+            if "Redmi" in device_name or "Buds" in device_name:
                 # Google Fast Pair service UUID
                 gfps_uuid = "0000fe2c-0000-1000-8000-00805f9b34fb"
                 if gfps_uuid in adv.service_data:
