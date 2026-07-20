@@ -11,7 +11,7 @@ class BluetoothManager:
         # Определяем язык Windows (1049 = Русский)
         try:
             self.is_ru = ctypes.windll.kernel32.GetUserDefaultUILanguage() == 1049
-        except:
+        except Exception:
             self.is_ru = False
             
         self.running = False
