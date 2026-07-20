@@ -1,23 +1,19 @@
 import timeit
-import sys
-import os
-from PyQt6.QtWidgets import QApplication
 
-os.environ['QT_QPA_PLATFORM'] = 'offscreen'
-app = QApplication(sys.argv)
+class Device:
+    def __init__(self, name):
+        self.name = name
 
-def original():
-    min_x = min(s.geometry().left() for s in QApplication.screens())
-    max_x = max(s.geometry().right() for s in QApplication.screens())
-    min_y = min(s.geometry().top() for s in QApplication.screens())
-    max_y = max(s.geometry().bottom() for s in QApplication.screens())
+device = Device("Some Other Device Name")
 
-def optimized():
-    screens = QApplication.screens()
-    min_x = min(s.geometry().left() for s in screens)
-    max_x = max(s.geometry().right() for s in screens)
-    min_y = min(s.geometry().top() for s in screens)
-    max_y = max(s.geometry().bottom() for s in screens)
+def orig_callback():
+    if "Redmi" in str(device.name) or "Buds" in str(device.name):
+        pass
 
-print("Original:", timeit.timeit(original, number=10000))
-print("Optimized:", timeit.timeit(optimized, number=10000))
+def new_callback():
+    name = str(device.name)
+    if "Redmi" in name or "Buds" in name:
+        pass
+
+print("Orig:", timeit.timeit(orig_callback, number=10000000))
+print("New: ", timeit.timeit(new_callback, number=10000000))
