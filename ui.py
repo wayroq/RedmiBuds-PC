@@ -134,10 +134,11 @@ class FloatingWindow(QWidget):
             new_pos = event.globalPosition().toPoint() - self._drag_pos
             
             # Ограничиваем область перетаскивания (с учетом всех мониторов)
-            min_x = min(s.geometry().left() for s in QApplication.screens()) - self.width() // 2
-            max_x = max(s.geometry().right() for s in QApplication.screens()) - self.width() // 2
-            min_y = min(s.geometry().top() for s in QApplication.screens()) - self.height() // 2
-            max_y = max(s.geometry().bottom() for s in QApplication.screens()) - self.height() // 2
+            screens = QApplication.screens()
+            min_x = min(s.geometry().left() for s in screens) - self.width() // 2
+            max_x = max(s.geometry().right() for s in screens) - self.width() // 2
+            min_y = min(s.geometry().top() for s in screens) - self.height() // 2
+            max_y = max(s.geometry().bottom() for s in screens) - self.height() // 2
             
             new_x = max(min_x, min(new_pos.x(), max_x))
             new_y = max(min_y, min(new_pos.y(), max_y))
@@ -163,10 +164,11 @@ class FloatingWindow(QWidget):
             y = pos.y() - self.height() - 60
             
         # Проверяем, чтобы сохраненная позиция не оказалась за пределами экранов (например, при смене монитора)
-        min_x = min(s.geometry().left() for s in QApplication.screens()) - self.width() // 2
-        max_x = max(s.geometry().right() for s in QApplication.screens()) - self.width() // 2
-        min_y = min(s.geometry().top() for s in QApplication.screens()) - self.height() // 2
-        max_y = max(s.geometry().bottom() for s in QApplication.screens()) - self.height() // 2
+        screens = QApplication.screens()
+        min_x = min(s.geometry().left() for s in screens) - self.width() // 2
+        max_x = max(s.geometry().right() for s in screens) - self.width() // 2
+        min_y = min(s.geometry().top() for s in screens) - self.height() // 2
+        max_y = max(s.geometry().bottom() for s in screens) - self.height() // 2
         
         x = max(min_x, min(x, max_x))
         y = max(min_y, min(y, max_y))
