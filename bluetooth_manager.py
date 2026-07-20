@@ -57,6 +57,24 @@ class BluetoothManager:
             
         await self.scanner.stop()
 
+    def set_noise_control(self, mode):
+        """
+        Stub for setting noise control mode.
+        mode can be: "anc", "off", "transparency"
+        """
+        status_msg = ""
+        if mode == "anc":
+            status_msg = "Включено ANC" if self.is_ru else "ANC Enabled"
+        elif mode == "transparency":
+            status_msg = "Прозрачность" if self.is_ru else "Transparency"
+        elif mode == "off":
+            status_msg = "Обычный режим" if self.is_ru else "Normal Mode"
+
+        if status_msg:
+            self.on_status_update(status_msg)
+
+        # TODO: Implement actual BLE GATT command to change noise control mode
+
     def _parse_gfps_data(self, data):
         # We parse the raw bytes based on real-world logs.
         if len(data) >= 13:

@@ -16,6 +16,10 @@ def main():
         tray_ui.update_status(status)
 
     bt_manager = BluetoothManager(on_battery_update=on_battery, on_status_update=on_status)
+
+    # Connect UI buttons to BluetoothManager
+    tray_ui.window.battery_widget.on_noise_control = bt_manager.set_noise_control
+
     bt_manager.start()
 
     sys.exit(app.exec())

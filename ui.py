@@ -1,3 +1,7 @@
+import sys
+import os
+from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, 
+                             QLabel, QSystemTrayIcon, QMenu, QPushButton)
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout,
                              QSystemTrayIcon, QMenu)
 from PyQt6.QtGui import QIcon, QPainter, QColor, QPen, QBrush, QFont, QPixmap, QPainterPath
@@ -10,9 +14,43 @@ class BatteryWidget(QWidget):
         self.right_bat = -1
         self.case_bat = -1
         lang = QLocale.system().name()
-        is_ru = lang.startswith("ru")
-        self.status = "Поиск наушников..." if is_ru else "Searching for earbuds..."
-        self.setMinimumSize(250, 350)
+        self.is_ru = lang.startswith("ru")
+        self.status = "Поиск наушников..." if self.is_ru else "Searching for earbuds..."
+        self.setMinimumSize(250, 440)
+
+        self.on_noise_control = None
+
+        self.btn_anc = QPushButton("ANC", self)
+        self.btn_transparency = QPushButton("Прозрачность" if self.is_ru else "Transparency", self)
+        self.btn_off = QPushButton("Обычный" if self.is_ru else "Off", self)
+
+        button_style = """
+            QPushButton {
+                background-color: rgba(60, 60, 60, 200);
+                color: white;
+                border-radius: 10px;
+                font-family: 'Segoe UI';
+                font-weight: bold;
+                font-size: 12px;
+            }
+            QPushButton:hover {
+                background-color: rgba(80, 80, 80, 255);
+            }
+            QPushButton:pressed {
+                background-color: rgba(100, 100, 100, 255);
+            }
+        """
+        self.btn_anc.setStyleSheet(button_style)
+        self.btn_transparency.setStyleSheet(button_style)
+        self.btn_off.setStyleSheet(button_style)
+
+        self.btn_anc.setGeometry(15, 310, 220, 30)
+        self.btn_transparency.setGeometry(15, 350, 220, 30)
+        self.btn_off.setGeometry(15, 390, 220, 30)
+
+        self.btn_anc.clicked.connect(lambda: self.on_noise_control("anc") if self.on_noise_control else None)
+        self.btn_transparency.clicked.connect(lambda: self.on_noise_control("transparency") if self.on_noise_control else None)
+        self.btn_off.clicked.connect(lambda: self.on_noise_control("off") if self.on_noise_control else None)
 
     def update_battery(self, left, right, case):
         self.left_bat = left
@@ -50,6 +88,13 @@ class BatteryWidget(QWidget):
 
         # Draw Case
         self._draw_case(painter, 90, 210, self.case_bat)
+
+        # Draw Noise Control Title
+        painter.setPen(QPen(QColor(180, 180, 180)))
+        font = QFont("Segoe UI", 10)
+        painter.setFont(font)
+        title = "Управление шумом" if self.is_ru else "Noise Control"
+        painter.drawText(QRect(10, 280, 230, 20), Qt.AlignmentFlag.AlignCenter, title)
 
     def _draw_earbud(self, painter, x, y, bat, is_right):
         # Draw earbud shape
@@ -115,7 +160,7 @@ class FloatingWindow(QWidget):
         super().__init__()
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Tool)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.setFixedSize(250, 350)
+        self.setFixedSize(250, 440)
         
         self.layout = QVBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
