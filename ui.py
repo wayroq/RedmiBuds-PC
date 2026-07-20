@@ -2,6 +2,8 @@ import sys
 import os
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, 
                              QLabel, QSystemTrayIcon, QMenu, QPushButton)
+from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout,
+                             QSystemTrayIcon, QMenu)
 from PyQt6.QtGui import QIcon, QPainter, QColor, QPen, QBrush, QFont, QPixmap, QPainterPath
 from PyQt6.QtCore import Qt, QPoint, QRect, QTimer, QSettings, QLocale
 
